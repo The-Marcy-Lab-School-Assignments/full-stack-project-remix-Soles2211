@@ -33,49 +33,47 @@ Schema
 
     users
     ─────────────────────────────
-    user_id        SERIAL PRIMARY KEY
-    username       TEXT UNIQUE NOT NULL
-    password_hash  TEXT NOT NULL
+    user_id         SERIAL PRIMARY KEY
+    username        TEXT UNIQUE NOT NULL
+    password_hash   TEXT NOT NULL
     
     books
     ─────────────────────────────
-    book_id        SERIAL PRIMARY KEY
-    title          TEXT NOT NULL
-    author         TEXT NOT NULL
-    year           INTEGER NOT NULL
-    description    TEXT NOT NULL
-    user_id        INTEGER REFERENCES users(user_id) ON DELETE CASCADE
+    book_id         SERIAL PRIMARY KEY
+    title           TEXT NOT NULL
+    author          TEXT NOT NULL
+    year            INTEGER NOT NULL
+    description     TEXT NOT NULL
+    user_id         INTEGER REFERENCES users(user_id) ON DELETE CASCADE
     
     groups
     ─────────────────────────────
-    group_id       SERIAL PRIMARY KEY
-    group_name     TEXT NOT NULL
-    description    TEXT NOT NULL
-    max-capacity   INTEGER NOT NULL
-    location       TEXT NOT NULL
-    meet-time      TEXT NOT NULL
+    group_id        SERIAL PRIMARY KEY
+    group_name      TEXT NOT NULL
+    description     TEXT NOT NULL
+    max-capacity    INTEGER NOT NULL
+    location        TEXT NOT NULL
+    meet-time       TEXT NOT NULL
     
     comments
     ─────────────────────────────
-    comment_id     SERIAL PRIMARY KEY
-    content        TEXT NOT NULL
-    date_time           DATETIME
-    user_id        INTEGER REFERENCES users(user_id) ON DELETE CASCADE
+    comment_id      SERIAL PRIMARY KEY
+    content         TEXT NOT NULL
+    date_time       DATETIME
+    user_id         INTEGER REFERENCES users(user_id) ON DELETE CASCADE
     
     
     group_users
     ─────────────────────────────
-    group_users_id SERIAL PRIMARY KEY
-    group_id       INTEGER REFERENCES groups(group_id) ON DELETE CASCADE
-    user_id        INTEGER REFERENCES users(user_id) ON DELETE CASCADE 
-    
-    
+    group_users_id  SERIAL PRIMARY KEY
+    group_id        INTEGER REFERENCES groups(group_id) ON DELETE CASCADE
+    user_id         INTEGER REFERENCES users(user_id) ON DELETE CASCADE 
     
     group_books
     ─────────────────────────────
-    group_books_id SERIAL PRIMARY KEY
-    group_id       INTEGER REFERENCES groups(group_id) ON DELETE CASCADE
-    book_id        INTEGER REFERENCES books(book_id) ON DELETE CASCADE
+    group_books_id  SERIAL PRIMARY KEY
+    group_id        INTEGER REFERENCES groups(group_id) ON DELETE CASCADE
+    book_id         INTEGER REFERENCES books(book_id) ON DELETE CASCADE
     
     book_comments
     ─────────────────────────────
