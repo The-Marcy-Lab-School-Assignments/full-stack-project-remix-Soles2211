@@ -89,13 +89,44 @@ A user has many todos. Deleting a user cascades to delete all of their todos.
 API Contract
 ------------
 
-### Auth endpoints
+**API Contract**
+----------------
 
-MethodEndpointRequest BodyResponsePOST`/api/auth/register{ username, password }{ user_id, username }`POST`/api/auth/login{ username, password }{ user_id, username }`DELETE`/api/auth/logout`—`{ message }`GET`/api/auth/me`—`{ user_id, username }` or `null`
+METHOD | ENDPOINT | PURPOSE | REQUEST BODY (JSON) | RESPONSE (JSON)
 
-### Todo endpoints (all require authentication)
+\---------|---------------------------------------------|----------------------------------------------|-------------------------------------------------------------------------------------|----------------------------------------------------------------------------------
 
-MethodEndpointRequest BodyResponseGET`/api/todos`—`[{ todo_id, title, is_complete, user_id }]`POST`/api/todos{ title }{ todo_id, title, is_complete, user_id }`PATCH`/api/todos/:todo_id{ is_complete }{ todo_id, title, is_complete, user_id }`DELETE`/api/todos/:todo_id`—`{ todo_id, title, is_complete, user_id }`
+POST | /users | Register a new user | { "username": "string", "password": "string" } | 201 Created { "user\_id": integer, "username": "string" }
+
+GET | /users/{user\_id} | Get user by ID | — | 200 OK { "user\_id": integer, "username": "string" }
+
+POST | /books | Add a new book (by a user) | { "title": "string", "author": "string", "year": integer, "description": "string", "user\_id": integer } | 201 Created { "book\_id": integer, "title": "string", "author": "string", "year": integer, "description": "string", "user\_id": integer }
+
+GET | /books | List all books | — | 200 OK \[ { "book\_id": integer, "title": "string", "author": "string", "year": integer, "description": "string", "user\_id": integer }, ... \]
+
+GET | /books/{book\_id} | Get details of a single book | — | 200 OK { "book\_id": integer, "title": "string", "author": "string", "year": integer, "description": "string", "user\_id": integer }
+
+POST | /groups | Create a new book club group | { "group\_name": "string", "description": "string", "max\_capacity": integer, "location": "string", "meet\_time": "string" } | 201 Created { "group\_id": integer, "group\_name": "string", "description": "string", "max\_capacity": integer, "location": "string", "meet\_time": "string" }
+
+GET | /groups | List all groups | — | 200 OK \[ { "group\_id": integer, "group\_name": "string", "description": "string", "max\_capacity": integer, "location": "string", "meet\_time": "string" }, ... \]
+
+GET | /groups/{group\_id} | Get group by ID | — | 200 OK { "group\_id": integer, "group\_name": "string", "description": "string", "max\_capacity": integer, "location": "string", "meet\_time": "string" }
+
+POST | /groups/{group\_id}/users/{user\_id} | Add a user to a group | — | 201 Created { "message": "User added to group", "group\_users\_id": integer }
+
+DELETE | /groups/{group\_id}/users/{user\_id} | Remove a user from a group | — | 200 OK { "message": "User removed from group" }
+
+POST | /groups/{group\_id}/books/{book\_id} | Assign a book to a group | — | 201 Created { "message": "Book assigned to group", "group\_books\_id": integer }
+
+DELETE | /groups/{group\_id}/books/{book\_id} | Remove a book from a group | — | 200 OK { "message": "Book removed from group" }
+
+POST | /comments | Create a comment (not yet linked to a book) | { "content": "string", "date\_time": "2025-04-08T14:30:00Z", "user\_id": integer } | 201 Created { "comment\_id": integer, "content": "string", "date\_time": "string", "user\_id": integer }
+
+POST | /books/{book\_id}/comments/{comment\_id} | Link an existing comment to a book | — | 201 Created { "message": "Comment linked to book", "book\_comment\_id": integer }
+
+GET | /books/{book\_id}/comments | Get all comments for a specific book | — | 200 OK \[ { "comment\_id": integer, "content": "string", "date\_time": "string", "user\_id": integer }, ... \]
+
+DELETE | /comments/{comment\_id} | Delete a comment | — | 200 OK { "message": "Comment deleted" }
 
 Setup
 -----
@@ -104,7 +135,7 @@ Setup
 
 Create a local Postgres database:
 
-    createdb todos_casestudy
+    createdb book_club_db
 
 ### 2\. Server
 
@@ -137,36 +168,7 @@ Seed Users
 
 After running `npm run db:seed`, these accounts are available:
 
-UsernamePasswordalicepassword123bobpassword123
+Username Password
+alice    password123
+bob      password123
 
-Application Structure
----------------------
-
-    swe-casestudy-7-todo-app/
-    ├── frontend/               # React app (Vite)
-    │   ├── src/
-    │   │   ├── App.jsx         # Root component: currentUser state, session rehydration, auth handlers
-    │   │   ├── adapters/
-    │   │   │   ├── auth-adapters.js  # Fetch adapters for /api/auth/* endpoints
-    │   │   │   └── todo-adapters.js  # Fetch adapters for /api/todos/* endpoints
-    │   │   └── components/
-    │   │       ├── AuthPage.jsx    # Login + Register forms (shown when logged out)
-    │   │       ├── TodoPage.jsx    # Main app container (shown when logged in)
-    │   │       ├── AddTodoForm.jsx # Form to create a new todo
-    │   │       ├── TodoList.jsx    # Renders a list of TodoItems
-    │   │       └── TodoItem.jsx    # Single todo: checkbox, title, delete button
-    │   └── vite.config.js      # Proxies /api requests to Express in development
-    └── server/                 # Express + Postgres API
-        ├── index.js            # App entry point, route definitions
-        ├── controllers/
-        │   ├── authControllers.js  # register, login, logout, getMe
-        │   └── todoControllers.js  # list, create, update, delete todos
-        ├── models/
-        │   ├── userModel.js    # SQL queries for the users table
-        │   └── todoModel.js    # SQL queries for the todos table
-        ├── middleware/
-        │   ├── checkAuthentication.js  # Blocks unauthenticated requests
-        │   └── logRoutes.js            # Logs each incoming request
-        └── db/
-            ├── pool.js         # Postgres connection pool
-            └── seed.js         # Creates tables and inserts sample data

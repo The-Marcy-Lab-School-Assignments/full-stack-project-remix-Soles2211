@@ -36,3 +36,4 @@ module.exports.validatePassword = async (username, password) => {
   if (!isValid) return null;
   return { user_id: user.user_id, username: user.username };
 };
+
