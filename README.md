@@ -82,8 +82,6 @@ Schema
     comment_id      INTEGER REFERENCES commentss(comment_id) ON DELETE CASCADE
     
 
-A user has many todos. Deleting a user cascades to delete all of their todos.
-
 API Contract
 ------------
 
