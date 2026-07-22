@@ -84,45 +84,24 @@ Schema
 
 API Contract
 ------------
-
-**API Contract**
-----------------
-
-METHOD | ENDPOINT | PURPOSE | REQUEST BODY (JSON) | RESPONSE (JSON)
-
-\---------|---------------------------------------------|----------------------------------------------|-------------------------------------------------------------------------------------|----------------------------------------------------------------------------------
-
-POST | /users | Register a new user | { "username": "string", "password": "string" } | 201 Created { "user\_id": integer, "username": "string" }
-
-GET | /users/{user\_id} | Get user by ID | — | 200 OK { "user\_id": integer, "username": "string" }
-
-POST | /books | Add a new book (by a user) | { "title": "string", "author": "string", "year": integer, "description": "string", "user\_id": integer } | 201 Created { "book\_id": integer, "title": "string", "author": "string", "year": integer, "description": "string", "user\_id": integer }
-
-GET | /books | List all books | — | 200 OK \[ { "book\_id": integer, "title": "string", "author": "string", "year": integer, "description": "string", "user\_id": integer }, ... \]
-
-GET | /books/{book\_id} | Get details of a single book | — | 200 OK { "book\_id": integer, "title": "string", "author": "string", "year": integer, "description": "string", "user\_id": integer }
-
-POST | /groups | Create a new book club group | { "group\_name": "string", "description": "string", "max\_capacity": integer, "location": "string", "meet\_time": "string" } | 201 Created { "group\_id": integer, "group\_name": "string", "description": "string", "max\_capacity": integer, "location": "string", "meet\_time": "string" }
-
-GET | /groups | List all groups | — | 200 OK \[ { "group\_id": integer, "group\_name": "string", "description": "string", "max\_capacity": integer, "location": "string", "meet\_time": "string" }, ... \]
-
-GET | /groups/{group\_id} | Get group by ID | — | 200 OK { "group\_id": integer, "group\_name": "string", "description": "string", "max\_capacity": integer, "location": "string", "meet\_time": "string" }
-
-POST | /groups/{group\_id}/users/{user\_id} | Add a user to a group | — | 201 Created { "message": "User added to group", "group\_users\_id": integer }
-
-DELETE | /groups/{group\_id}/users/{user\_id} | Remove a user from a group | — | 200 OK { "message": "User removed from group" }
-
-POST | /groups/{group\_id}/books/{book\_id} | Assign a book to a group | — | 201 Created { "message": "Book assigned to group", "group\_books\_id": integer }
-
-DELETE | /groups/{group\_id}/books/{book\_id} | Remove a book from a group | — | 200 OK { "message": "Book removed from group" }
-
-POST | /comments | Create a comment (not yet linked to a book) | { "content": "string", "date\_time": "2025-04-08T14:30:00Z", "user\_id": integer } | 201 Created { "comment\_id": integer, "content": "string", "date\_time": "string", "user\_id": integer }
-
-POST | /books/{book\_id}/comments/{comment\_id} | Link an existing comment to a book | — | 201 Created { "message": "Comment linked to book", "book\_comment\_id": integer }
-
-GET | /books/{book\_id}/comments | Get all comments for a specific book | — | 200 OK \[ { "comment\_id": integer, "content": "string", "date\_time": "string", "user\_id": integer }, ... \]
-
-DELETE | /comments/{comment\_id} | Delete a comment | — | 200 OK { "message": "Comment deleted" }
+| METHOD | ENDPOINT | PURPOSE | REQUEST BODY (JSON) | RESPONSE (JSON) |
+|--------|----------|---------|----------------------|------------------|
+| POST | `/users` | Register a new user | `{ "username": "string", "password": "string" }` | 201 Created `{ "user_id": integer, "username": "string" }` |
+| GET | `/users/{user_id}` | Get user by ID | — | 200 OK `{ "user_id": integer, "username": "string" }` |
+| POST | `/books` | Add a new book (by a user) | `{ "title": "string", "author": "string", "year": integer, "description": "string", "user_id": integer }` | 201 Created `{ "book_id": integer, "title": "string", "author": "string", "year": integer, "description": "string", "user_id": integer }` |
+| GET | `/books` | List all books | — | 200 OK `[ { "book_id": integer, "title": "string", "author": "string", "year": integer, "description": "string", "user_id": integer }, ... ]` |
+| GET | `/books/{book_id}` | Get details of a single book | — | 200 OK `{ "book_id": integer, "title": "string", "author": "string", "year": integer, "description": "string", "user_id": integer }` |
+| POST | `/groups` | Create a new book club group | `{ "group_name": "string", "description": "string", "max_capacity": integer, "location": "string", "meet_time": "string" }` | 201 Created `{ "group_id": integer, "group_name": "string", "description": "string", "max_capacity": integer, "location": "string", "meet_time": "string" }` |
+| GET | `/groups` | List all groups | — | 200 OK `[ { "group_id": integer, "group_name": "string", "description": "string", "max_capacity": integer, "location": "string", "meet_time": "string" }, ... ]` |
+| GET | `/groups/{group_id}` | Get group by ID | — | 200 OK `{ "group_id": integer, "group_name": "string", "description": "string", "max_capacity": integer, "location": "string", "meet_time": "string" }` |
+| POST | `/groups/{group_id}/users/{user_id}` | Add a user to a group | — | 201 Created `{ "message": "User added to group", "group_users_id": integer }` |
+| DELETE | `/groups/{group_id}/users/{user_id}` | Remove a user from a group | — | 200 OK `{ "message": "User removed from group" }` |
+| POST | `/groups/{group_id}/books/{book_id}` | Assign a book to a group | — | 201 Created `{ "message": "Book assigned to group", "group_books_id": integer }` |
+| DELETE | `/groups/{group_id}/books/{book_id}` | Remove a book from a group | — | 200 OK `{ "message": "Book removed from group" }` |
+| POST | `/comments` | Create a comment (not yet linked to a book) | `{ "content": "string", "date_time": "2025-04-08T14:30:00Z", "user_id": integer }` | 201 Created `{ "comment_id": integer, "content": "string", "date_time": "string", "user_id": integer }` |
+| POST | `/books/{book_id}/comments/{comment_id}` | Link an existing comment to a book | — | 201 Created `{ "message": "Comment linked to book", "book_comment_id": integer }` |
+| GET | `/books/{book_id}/comments` | Get all comments for a specific book | — | 200 OK `[ { "comment_id": integer, "content": "string", "date_time": "string", "user_id": integer }, ... ]` |
+| DELETE | `/comments/{comment_id}` | Delete a comment | — | 200 OK `{ "message": "Comment deleted" }` |
 
 Setup
 -----
